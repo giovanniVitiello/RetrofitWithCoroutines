@@ -49,8 +49,6 @@ class ConvertDetailViewModel : ViewModel() {
             try {
                 val moneyDetail = retrofiteService.moneyDetail()
                 Log.d("GifDetailViewModel", "result: $moneyDetail")
-//                val moneyDouble: Double? = result.money.rates?.eUR?.times(event.toDouble())
-//                val moneyDouble2F: Double? = moneyDouble?.times(100.0)?.roundToInt()?.div(100.0)
                 val moneyFinal = moneyDetail?.times(money.toDouble())
                 state.value = ConvertDetailState.Success(moneyFinal.toString())
             } catch (exception: Throwable) {
