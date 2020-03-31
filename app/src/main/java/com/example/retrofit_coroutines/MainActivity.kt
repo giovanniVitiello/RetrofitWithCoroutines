@@ -10,7 +10,8 @@ import androidx.lifecycle.ViewModelProviders
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var result: TextView
+    lateinit var resultEuro: TextView
+    lateinit var resultSterlina: TextView
     lateinit var insert: EditText
     lateinit var converti: Button
 
@@ -19,7 +20,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         insert = findViewById(R.id.insert)
-        result = findViewById(R.id.string)
+        resultEuro = findViewById(R.id.euro)
+        resultSterlina = findViewById(R.id.sterlina)
         converti = findViewById(R.id.button)
 
         val converterDetailViewModel: ConvertDetailViewModel =
@@ -37,17 +39,25 @@ class MainActivity : AppCompatActivity() {
                     showError()
                 }
                 is ConvertDetailState.Success -> {
-                    result.text = state.newString
+                    showConversions(state.money)
                 }
             }
         })
     }
 
     private fun showProgress() {
-        result.text = "waiting...."
+        resultEuro.text = "waiting...."
+        resultSterlina.text = "waiting...."
     }
 
     private fun showError() {
-        result.text = "error"
+        resultEuro.text = "error"
+        resultSterlina.text = "error"
+    }
+
+    private fun showConversions(moneyUtil: MoneyUtil) {
+        val valueToDouble = insert.text.toString().toDouble()
+        resultEuro.text = valueToDouble.let { moneyUtil.rates?.eUR?.times(it).toString() }
+        resultSterlina.text = valueToDouble.let { moneyUtil.rates?.gBP?.times(it).toString() }
     }
 }

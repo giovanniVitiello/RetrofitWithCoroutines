@@ -16,11 +16,13 @@ data class Money(
 ) {
     data class Rates(
         @SerializedName("EUR")
-        val eUR: Double?
+        val eUR: Double?,
+            @SerializedName("GBP")
+        val gBP: Double?
     )
 
     /*function that convert Money data in MoneyUtil data, MoneyUtil is a class that take only necessary paramether*/
-    fun toMoneyUtil(): Double? {
-        return rates?.eUR
+    fun toMoneyUtil(): MoneyUtil? {
+        return MoneyUtil(rates = MoneyUtil.Rates(rates?.eUR, rates?.gBP))
     }
 }

@@ -29,7 +29,7 @@ class RetrofiteService {
     private val service: RetrofitServiceInterface =
         retrofit.create(RetrofitServiceInterface::class.java)
 
-    suspend fun moneyDetail(): Double? {
+    suspend fun moneyDetail(): MoneyUtil? {
         val response = service.getEuroMoneyDetail(app_id = API_KEY, base = "USD")
         val success = response.body()
 
@@ -40,7 +40,6 @@ class RetrofiteService {
         }
     }
 }
-
 
 interface RetrofitServiceInterface {
     @GET("latest.json")

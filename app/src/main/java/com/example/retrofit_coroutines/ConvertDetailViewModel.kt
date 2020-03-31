@@ -1,6 +1,7 @@
 package com.example.retrofit_coroutines
 
 import android.util.Log
+import android.util.Log.e
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,7 +15,7 @@ sealed class ConvertDetailEvent() {
 sealed class ConvertDetailState() {
     object InProgress : ConvertDetailState()
     data class Error(val error: Throwable) : ConvertDetailState()
-    data class Success(val newString: String) : ConvertDetailState()
+    data class Success(val money: MoneyUtil) : ConvertDetailState()
 }
 
 sealed class MoneyUtilResult {
@@ -38,19 +39,18 @@ class ConvertDetailViewModel : ViewModel() {
 
     fun sendEvent(event: ConvertDetailEvent) {
         when (event) {
-            is ConvertDetailEvent.Load -> loadContent(event.newString)
+            is ConvertDetailEvent.Load -> loadContent()
         }
     }
 
-    private fun loadContent(money: String) {
+    private fun loadContent() {
         state.value = ConvertDetailState.InProgress
 
         viewModelScope.launch {
             try {
                 val moneyDetail = retrofiteService.moneyDetail()
                 Log.d("GifDetailViewModel", "result: $moneyDetail")
-                val moneyFinal = moneyDetail?.times(money.toDouble())
-                state.value = ConvertDetailState.Success(moneyFinal.toString())
+                state.value = moneyDetail?.let { ConvertDetailState.Success(it) }
             } catch (exception: Throwable) {
                 state.value = ConvertDetailState.Error(exception)
             }
